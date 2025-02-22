@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Button, TextInput, TouchableOpacity } from 'react-native';
 
 
 export default function App() {
@@ -24,24 +24,42 @@ export default function App() {
         <View style={styles.rowContainer}>
           <TextInput backgroundColor='white' width='150'
             value={fruit}
-            onChangeText={text=> setFruit(text)}>
-            </TextInput>
-          <Button title='Add fruit' backgroundColor='#111' onPress={() => {
-            const newID = nextID;
-            setNextID(nextID + 1);
-            setFruits(
-              [...fruits,
-                {id: newID.toString(),
+            placeholder='Add a fruit'
+            onChangeText={text => setFruit(text)}>
+          </TextInput>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+
+              if(fruit.trim()==='') return;
+
+              const newID = nextID;
+              setNextID(nextID + 1);
+              setFruits(
+                [...fruits,
+                {
+                  id: newID.toString(),
                   name: fruit
-                } 
-              ]);
-          }}>
-          </Button>
+                }
+                ]);
+            }}>
+            <Text style={styles.buttonText}>Add</Text>
+          </TouchableOpacity>
         </View>
         {fruits.map(fruit => (
-          <Text key={fruit.id}>
-             ID: {fruit.id} - Nome: {fruit.name}
-          </Text>
+          <View key={fruit.id} style={styles.rowContainer}>
+            <Text key={fruit.id}>
+              ID: {fruit.id} - Nome: {fruit.name}
+            </Text>
+            <Button title='Delete'
+            onPress={()=>
+            {
+              setFruits(fruits.filter(f=>f.id!==fruit.id));
+            }}
+
+            >
+            </Button>
+          </View>
         ))}
       </View>
       <StatusBar style="auto" /> //Barra di stato e auto per il colore di sfondo (auto = backgroundColor)
@@ -65,5 +83,14 @@ const styles = StyleSheet.create({ //Simile a CSS ma per React Native
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#00ffff',
+    padding: 10,
+    marginLeft: 10,
+    borderWidth: 1,
+    borderColor: '#fff',
+    color: '#fff',
+    borderRadius: 5,
   },
 });
